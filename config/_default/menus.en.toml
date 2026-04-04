@@ -1,0 +1,14 @@
+[[main]]
+  name = "eSIM SHOP"
+  url = "https://shop.sim9.kr"
+  weight = 10
+
+[[main]]
+  name = "이용 가이드"
+  url = "/posts/guide"
+  weight = 20
+
+[[main]]
+  name = "문의하기"
+  url = "mailto:yim@himanainu.jp"
+  weight = 30
