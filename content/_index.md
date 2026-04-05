@@ -19,7 +19,7 @@ layout: "homepage"
 
 <br>
 
-{{< button href="https://shop.sim9.kr" target="_blank" >}}
+{{< button href="https://shop.sim9.kr/" target="_blank" >}}
 eSIM 구매하러 가기
 {{< /button >}}
 
