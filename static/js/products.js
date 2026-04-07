@@ -27,7 +27,6 @@ async function fetchSIM9Products() {
                 card += '<h3 style="font-size: 1.1rem; margin: 0 0 15px 0; color: #222; height: 45px; overflow: hidden;">' + product.Name + '</h3>';
                 card += '<div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 20px;">';
                 card += '<span style="font-size: 1.5rem; font-weight: 800; color: #222;">\u20A9' + retailPrice.toLocaleString() + '</span>';
-                card += '<span style="font-size: 0.75rem; color: #999;">(' + product.Price_USD_Disp + ')</span>';
                 card += '</div>';
                 card += '<a href="https://shop.sim9.kr/product/detail.html?product_no=' + (product.id || 77) + '" target="_blank" style="display: block; text-align: center; background: #222; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">상품 상세보기</a>';
                 card += '</div></div>';
