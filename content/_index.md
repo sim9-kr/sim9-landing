@@ -48,7 +48,7 @@ async function fetchSIM9Products() {
             const displayData = json.data;
 
             displayData.forEach(product => {
-                // [수정] 카페24 판매가와 동일하게 10배 마진 적용하여 표시
+                // 카페24 판매가와 동일하게 10배 마진 적용하여 표시
                 const testPrice = product.Price_KRW * 10;
                 
                 const card = `
@@ -62,7 +62,8 @@ async function fetchSIM9Products() {
                             <div style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">
                                 (시스템 테스트 중)
                             </div>
-                            <a href="https://shop.sim9.kr/product/${product.Slug}" 
+                            <a href="https://shop.sim9.kr/product/detail.html?product_no=${product.id || 77}" 
+                               target="_blank"
                                style="display: block; text-align: center; background: #333; color: #fff; padding: 10px; border-radius: 6px; text-decoration: none; font-size: 0.9rem;">
                                상품 상세보기
                             </a>
