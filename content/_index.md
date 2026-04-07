@@ -1,36 +1,48 @@
 ---
-title: "SIM9"
-description: "일본 여행, 더 가볍고 빠르게."
+title: "SIM9 - 일본 여행의 새로운 기준"
+description: "도착하자마자 바로 터지는 자유, SIM9 eSIM"
+layout: "homepage"
 cascade:
   showDate: false
   showAuthor: false
   showReadingTime: false
-  showEdit: false
-
-# Blowfish의 '메인 히어로' 스타일 설정
-layout: "homepage"
 ---
 
-# 🇯🇵 일본 여행의 새로운 기준, SIM9
-### "도착하자마자 바로 터지는 자유"
+<section style="position: relative; padding: 120px 20px; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/Gemini_Generated_Image_a2qw41a2qw41a2qw.jpg'); background-size: cover; background-position: center; color: white; text-align: center; border-radius: 20px; margin-bottom: 60px;">
+    <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">🇯🇵 일본 여행, 더 가볍고 빠르게.</h1>
+    <p style="font-size: 1.5rem; margin-bottom: 40px; opacity: 0.9;">"도착하자마자 바로 터지는 자유, SIM9 eSIM"</p>
+    <div style="display: flex; justify-content: center; gap: 15px;">
+        <a href="https://shop.sim9.kr/" target="_blank" style="background: #ff4757; color: white; padding: 15px 35px; border-radius: 50px; font-weight: bold; text-decoration: none; transition: 0.3s;">eSIM 구매하러 가기</a>
+        <a href="/posts/guide" style="background: rgba(255,255,255,0.2); color: white; padding: 15px 35px; border-radius: 50px; font-weight: bold; text-decoration: none; backdrop-filter: blur(5px);">사용 가이드 보기</a>
+    </div>
+</section>
 
-복잡한 설정 없이, 합리적인 가격으로 일본 어디서나 연결되세요. 
-지금 바로 나에게 맞는 eSIM을 찾아보세요.
+<section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 80px;">
+    <div style="text-align: center; padding: 20px;">
+        <img src="/images/Gemini_Generated_Image_lz7gcolz7gcolz7g.jpg" style="width: 100%; border-radius: 15px; margin-bottom: 20px; height: 200px; object-fit: cover;">
+        <h3>현지 망 직결</h3>
+        <p style="color: #666;">소프트뱅크, NTT 도코모 등 현지 1위 사업자 망을 사용하여 끊김 없는 속도를 제공합니다.</p>
+    </div>
+    <div style="text-align: center; padding: 20px;">
+        <img src="/images/Gemini_Generated_Image_a2qw41a2qw41a2qw (1).jpg" style="width: 100%; border-radius: 15px; margin-bottom: 20px; height: 200px; object-fit: cover;">
+        <h3>3분 개통 완료</h3>
+        <p style="color: #666;">구매 즉시 이메일로 발송되는 QR코드로 공항에서 바로 개통하세요.</p>
+    </div>
+    <div style="text-align: center; padding: 20px;">
+        <img src="/images/Gemini_Generated_Image_a2qw41a2qw41a2qw (4).jpg" style="width: 100%; border-radius: 15px; margin-bottom: 20px; height: 200px; object-fit: cover;">
+        <h3>24시간 고객지원</h3>
+        <p style="color: #666;">일본 현지에서도, 한국에서도. 문제 발생 시 실시간으로 대응해 드립니다.</p>
+    </div>
+</section>
 
-<br>
+<hr style="border: 0; border-top: 1px solid #eee; margin: 60px 0;">
 
-{{< button href="https://shop.sim9.kr/" target="_blank" >}}
-eSIM 구매하러 가기
-{{< /button >}}
-
-{{< button href="/posts/guide" outline=true >}}
-사용 가이드 보기
-{{< /button >}}
-
-<section id="esim-section" style="padding: 50px 0; max-width: 1200px; margin: 0 auto;">
-    <h2 style="text-align: center; margin-bottom: 30px;">🌍 실시간 인기 eSIM 플랜</h2>
-    <div id="product-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 0 20px;">
-        <p id="loading-msg" style="text-align: center; grid-column: 1/-1;">상품 정보를 불러오는 중입니다...</p>
+<section id="esim-section" style="max-width: 1200px; margin: 0 auto;">
+    <h2 style="text-align: center; margin-bottom: 10px; font-size: 2rem;">🌍 실시간 인기 eSIM 플랜</h2>
+    <p style="text-align: center; color: #999; margin-bottom: 40px;">실시간 환율이 적용된 최적의 가격을 확인하세요.</p>
+    
+    <div id="product-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 0 20px;">
+        <p id="loading-msg" style="text-align: center; grid-column: 1/-1;">최신 플랜 정보를 불러오는 중입니다...</p>
     </div>
 </section>
 
@@ -44,27 +56,30 @@ async function fetchSIM9Products() {
 
         if (json.success) {
             loadingMsg.style.display = 'none';
-            // 모든 상품 출력 (테스트 포함)
             const displayData = json.data;
 
             displayData.forEach(product => {
-                // 카페24 판매가와 동일하게 10배 마진 적용하여 표시
+                // 10배 마진 가격 (테스트 모드)
                 const testPrice = product.Price_KRW * 10;
                 
+                // 국가별 썸네일 매칭 로직 (예시)
+                let thumb = '/images/Gemini_Generated_Image_lz7gcolz7gcolz7g (1).jpg';
+                if(product.Region === 'Japan') thumb = '/images/Gemini_Generated_Image_56hrag56hrag56hr.jpg';
+                if(product.Region === 'Vietnam') thumb = '/images/Gemini_Generated_Image_a2qw41a2qw41a2qw (2).jpg';
+
                 const card = `
-                    <div style="border: 1px solid #eee; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: #fff; display: flex; flex-direction: column;">
-                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">${product.Region}</div>
-                        <h3 style="font-size: 1.2rem; margin: 0 0 15px 0; color: #333;">${product.Name}</h3>
-                        <div style="margin-top: auto;">
-                            <div style="font-size: 1.4rem; font-weight: bold; color: #d9534f;">
-                                ₩${testPrice.toLocaleString()}
-                            </div>
-                            <div style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">
-                                (시스템 테스트 중)
+                    <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease; border: 1px solid #f0f0f0;">
+                        <img src="${thumb}" style="width: 100%; height: 160px; object-fit: cover;">
+                        <div style="padding: 20px;">
+                            <div style="font-size: 0.8rem; color: #ff4757; font-weight: bold; margin-bottom: 5px; text-transform: uppercase;">${product.Region}</div>
+                            <h3 style="font-size: 1.1rem; margin: 0 0 15px 0; color: #222; height: 45px; overflow: hidden;">${product.Name}</h3>
+                            <div style="display: flex; align-items: baseline; gap: 5px; margin-bottom: 20px;">
+                                <span style="font-size: 1.5rem; font-weight: 800; color: #222;">₩${testPrice.toLocaleString()}</span>
+                                <span style="font-size: 0.8rem; color: #999;">(테스트가)</span>
                             </div>
                             <a href="https://shop.sim9.kr/product/detail.html?product_no=${product.id || 77}" 
                                target="_blank"
-                               style="display: block; text-align: center; background: #333; color: #fff; padding: 10px; border-radius: 6px; text-decoration: none; font-size: 0.9rem;">
+                               style="display: block; text-align: center; background: #222; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">
                                상품 상세보기
                             </a>
                         </div>
@@ -74,8 +89,8 @@ async function fetchSIM9Products() {
             });
         }
     } catch (error) {
-        console.error('데이터 로드 실패:', error);
-        document.getElementById('loading-msg').innerText = '상품 정보를 불러오지 못했습니다.';
+        console.error('Data Load Error:', error);
+        document.getElementById('loading-msg').innerText = '데이터를 불러올 수 없습니다.';
     }
 }
 fetchSIM9Products();
