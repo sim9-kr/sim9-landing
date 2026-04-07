@@ -44,20 +44,23 @@ async function fetchSIM9Products() {
 
         if (json.success) {
             loadingMsg.style.display = 'none';
-            // 모든 카테고리(TEST 포함)를 다 출력함
+            // 모든 상품 출력 (테스트 포함)
             const displayData = json.data;
 
             displayData.forEach(product => {
+                // [수정] 카페24 판매가와 동일하게 10배 마진 적용하여 표시
+                const testPrice = product.Price_KRW * 10;
+                
                 const card = `
                     <div style="border: 1px solid #eee; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: #fff; display: flex; flex-direction: column;">
                         <div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">${product.Region}</div>
                         <h3 style="font-size: 1.2rem; margin: 0 0 15px 0; color: #333;">${product.Name}</h3>
                         <div style="margin-top: auto;">
-                            <div style="font-size: 1.4rem; font-weight: bold; color: #007bff;">
-                                ₩${product.Price_KRW.toLocaleString()}
+                            <div style="font-size: 1.4rem; font-weight: bold; color: #d9534f;">
+                                ₩${testPrice.toLocaleString()}
                             </div>
-                            <div style="font-size: 0.85rem; color: #999; margin-bottom: 15px;">
-                                (약 ${product.Price_USD_Disp})
+                            <div style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">
+                                (시스템 테스트 중)
                             </div>
                             <a href="https://shop.sim9.kr/product/${product.Slug}" 
                                style="display: block; text-align: center; background: #333; color: #fff; padding: 10px; border-radius: 6px; text-decoration: none; font-size: 0.9rem;">
@@ -74,6 +77,5 @@ async function fetchSIM9Products() {
         document.getElementById('loading-msg').innerText = '상품 정보를 불러오지 못했습니다.';
     }
 }
-// 페이지 로드 시 실행
 fetchSIM9Products();
 </script>
