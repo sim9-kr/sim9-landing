@@ -1,7 +1,6 @@
 ---
 title: "SIM9 - 일본 여행의 새로운 기준"
 description: "도착하자마자 바로 터지는 자유, SIM9 eSIM"
-layout: "homepage"
 cascade:
   showDate: false
   showAuthor: false
@@ -49,7 +48,6 @@ cascade:
 <script>
 async function fetchSIM9Products() {
     try {
-        // 확실히 작동하는 workers.dev 주소로 변경했습니다.
         const response = await fetch('https://api-sim9.sim9-kr.workers.dev/v1/products');
         const json = await response.json();
         const container = document.getElementById('product-container');
@@ -60,9 +58,8 @@ async function fetchSIM9Products() {
             const displayData = json.data;
 
             displayData.forEach(product => {
-                const testPrice = product.Price_KRW; // 현재 Worker 코드에서 이미 계산되어 나옵니다.
+                const testPrice = product.Price_KRW;
                 
-                // 국가별 썸네일 매칭 로직 (새로운 파일명으로 변경)
                 let thumb = '/images/sim9_07.png';
                 if(product.Region === 'Japan') thumb = '/images/sim9_01.png';
                 if(product.Region === 'Vietnam') thumb = '/images/sim9_03.png';
