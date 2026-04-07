@@ -44,8 +44,8 @@ async function fetchSIM9Products() {
 
         if (json.success) {
             loadingMsg.style.display = 'none';
-            // TEST 카테고리 제외하고 BEST 상품부터 출력
-            const displayData = json.data.filter(p => p.Category !== 'TEST');
+            // 모든 카테고리(TEST 포함)를 다 출력함
+            const displayData = json.data;
 
             displayData.forEach(product => {
                 const card = `
