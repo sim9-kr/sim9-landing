@@ -1,11 +1,4 @@
 #!/usr/bin/env python3
-"""
-Airalo eSIM 플랜 수집 스크립트
-- Airalo Partner API에서 패키지 목록 조회
-- Supabase esim_plans 테이블에 저장
-- GitHub Actions에서 매일 자동 실행
-"""
-
 import os
 import json
 import requests
@@ -13,10 +6,7 @@ import logging
 from datetime import datetime, timezone
 from supabase import create_client, Client
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 AIRALO_CLIENT_ID     = os.environ["AIRALO_CLIENT_ID"]
@@ -45,23 +35,22 @@ def fetch_packages(token: str) -> list:
     page = 1
 
     while True:
-        resp = requests.get(url, headers=headers, params={
-            "limit": 100,
-            "page":  page,
-        })
+        resp = requests.get(url, headers=headers, params={"limit": 100, "page": page})
         resp.raise_for_status()
         data = resp.json()
-
         batch = data.get("data", [])
         if not batch:
             break
-
         packages.extend(batch)
         logger.info(f"  페이지 {page}: {len(batch)}개 수집")
-
         if not data.get("links", {}).get("next"):
             break
         page += 1
+
+    # 첫 번째 패키지 구조 출력 (디버그)
+    if packages:
+        logger.info(f"첫 번째 패키지 키 목록: {list(packages[0].keys())}")
+        logger.info(f"첫 번째 패키지 샘플: {json.dumps(packages[0], indent=2)[:500]}")
 
     logger.info(f"✅ 총 {len(packages)}개 패키지 수집 완료")
     return packages
@@ -85,7 +74,7 @@ def normalize(pkg: dict) -> dict:
         else:
             data_gb = round(amount / 1024, 2)
 
-    plan_id = pkg.get("package_id") or pkg.get("id")
+    plan_id = pkg.get("package_id") or pkg.get("id") or pkg.get("slug")
 
     return {
         "provider":      "airalo",
@@ -113,10 +102,7 @@ def upsert_to_supabase(plans: list, supabase: Client):
     total = 0
     for i in range(0, len(plans), batch_size):
         batch = plans[i:i + batch_size]
-        supabase.table("esim_plans").upsert(
-            batch,
-            on_conflict="provider,plan_id"
-        ).execute()
+        supabase.table("esim_plans").upsert(batch, on_conflict="provider,plan_id").execute()
         total += len(batch)
         logger.info(f"  저장 {total}/{len(plans)}")
 
@@ -132,7 +118,7 @@ def main():
     packages = fetch_packages(token)
 
     plans = [normalize(pkg) for pkg in packages]
-    plans = [p for p in plans if p.get("plan_id")]  # plan_id 없는 항목 제거
+    plans = [p for p in plans if p.get("plan_id")]
 
     logger.info(f"✅ 정규화 완료: {len(plans)}개")
     upsert_to_supabase(plans, supabase)
