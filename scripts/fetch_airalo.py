@@ -1,4 +1,3 @@
-# scripts/fetch_airalo.py
 #!/usr/bin/env python3
 """
 Airalo eSIM 플랜 수집 스크립트
@@ -20,21 +19,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ============================================================
-# 설정
-# ============================================================
-
 AIRALO_CLIENT_ID     = os.environ["AIRALO_CLIENT_ID"]
 AIRALO_CLIENT_SECRET = os.environ["AIRALO_CLIENT_SECRET"]
 SUPABASE_URL         = os.environ["SUPABASE_URL"]
 SUPABASE_KEY         = os.environ["SUPABASE_KEY"]
 
-AIRALO_BASE_URL = "https://partners-api.airalo.com"  # Sandbox
-# AIRALO_BASE_URL = "https://partners-api.airalo.com"        # Production
-
-# ============================================================
-# 인증
-# ============================================================
+AIRALO_BASE_URL = "https://partners-api.airalo.com"
 
 def get_access_token() -> str:
     url = f"{AIRALO_BASE_URL}/v2/token"
@@ -47,10 +37,6 @@ def get_access_token() -> str:
     token = resp.json()["data"]["access_token"]
     logger.info("✅ Airalo 토큰 발급 완료")
     return token
-
-# ============================================================
-# 패키지 수집
-# ============================================================
 
 def fetch_packages(token: str) -> list:
     url = f"{AIRALO_BASE_URL}/v2/packages"
@@ -80,10 +66,6 @@ def fetch_packages(token: str) -> list:
     logger.info(f"✅ 총 {len(packages)}개 패키지 수집 완료")
     return packages
 
-# ============================================================
-# 데이터 정규화
-# ============================================================
-
 def normalize(pkg: dict) -> dict:
     operators = pkg.get("operators") or []
     country_codes = []
@@ -103,9 +85,11 @@ def normalize(pkg: dict) -> dict:
         else:
             data_gb = round(amount / 1024, 2)
 
+    plan_id = pkg.get("package_id") or pkg.get("id")
+
     return {
         "provider":      "airalo",
-        "plan_id":       pkg.get("package_id") or pkg.get("id"),
+        "plan_id":       str(plan_id) if plan_id else None,
         "plan_name":     pkg.get("title"),
         "country_code":  country_code,
         "country_codes": json.dumps(country_codes),
@@ -116,13 +100,9 @@ def normalize(pkg: dict) -> dict:
         "validity_days": pkg.get("day"),
         "price_usd":     float(pkg.get("price", 0)),
         "net_price_usd": float(pkg.get("net_price", 0)),
-        "affiliate_url": f"https://www.airalo.com/package/{pkg.get('package_id')}",
+        "affiliate_url": f"https://www.airalo.com/package/{plan_id}",
         "updated_at":    datetime.now(timezone.utc).isoformat(),
     }
-
-# ============================================================
-# Supabase 저장
-# ============================================================
 
 def upsert_to_supabase(plans: list, supabase: Client):
     if not plans:
@@ -142,10 +122,6 @@ def upsert_to_supabase(plans: list, supabase: Client):
 
     logger.info(f"✅ Supabase 저장 완료: {total}개")
 
-# ============================================================
-# 메인
-# ============================================================
-
 def main():
     logger.info("=" * 50)
     logger.info("Airalo 패키지 수집 시작")
@@ -154,7 +130,10 @@ def main():
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
     token = get_access_token()
     packages = fetch_packages(token)
+
     plans = [normalize(pkg) for pkg in packages]
+    plans = [p for p in plans if p.get("plan_id")]  # plan_id 없는 항목 제거
+
     logger.info(f"✅ 정규화 완료: {len(plans)}개")
     upsert_to_supabase(plans, supabase)
 
