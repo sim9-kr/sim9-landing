@@ -29,7 +29,7 @@ AIRALO_CLIENT_SECRET = os.environ["AIRALO_CLIENT_SECRET"]
 SUPABASE_URL         = os.environ["SUPABASE_URL"]
 SUPABASE_KEY         = os.environ["SUPABASE_KEY"]
 
-AIRALO_BASE_URL = "https://sandbox-partners-api.airalo.com"  # Sandbox
+AIRALO_BASE_URL = "https://partners-api.airalo.com"  # Sandbox
 # AIRALO_BASE_URL = "https://partners-api.airalo.com"        # Production
 
 # ============================================================
