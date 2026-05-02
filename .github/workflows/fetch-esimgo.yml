@@ -2,19 +2,24 @@ name: Fetch eSIM Go Plans
 
 on:
   schedule:
-    - cron: '0 1 * * *'  # 매일 KST 10:00
+    - cron: '0 1 * * *'
   workflow_dispatch:
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install dependencies
         run: pip install requests supabase
+
       - name: Run fetch
         env:
           ESIMGO_API_KEY: ${{ secrets.ESIMGO_API_KEY }}
