@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Airalo eSIM 플랜 수집 스크립트 v2
-- flat=true 파라미터로 실제 플랜 데이터 수집
+Airalo eSIM 플랜 수집 스크립트 v3
+- operators → packages 직접 파싱
 """
 
 import os
@@ -36,16 +36,15 @@ def get_access_token() -> str:
     logger.info("✅ Airalo 토큰 발급 완료")
     return token
 
-def fetch_packages(token: str) -> list:
-    """flat=true로 실제 플랜 데이터 수집"""
+def fetch_raw(token: str) -> list:
+    """국가별 operators 포함 전체 데이터 수집"""
     url = f"{AIRALO_BASE_URL}/v2/packages"
     headers = {"Authorization": f"Bearer {token}"}
-    packages = []
+    countries = []
     page = 1
 
     while True:
         resp = requests.get(url, headers=headers, params={
-            "flat":  "true",  # 핵심: 플랜 단위로 펼쳐서 반환
             "limit": 100,
             "page":  page,
         })
@@ -56,60 +55,78 @@ def fetch_packages(token: str) -> list:
         if not batch:
             break
 
-        packages.extend(batch)
-        logger.info(f"  페이지 {page}: {len(batch)}개 수집")
+        countries.extend(batch)
+        logger.info(f"  페이지 {page}: {len(batch)}개 국가 수집")
 
         if not data.get("links", {}).get("next"):
             break
         page += 1
 
-    logger.info(f"✅ 총 {len(packages)}개 패키지 수집 완료")
+    logger.info(f"✅ 총 {len(countries)}개 국가 수집")
+    return countries
 
-    # 첫 번째 패키지 구조 확인
-    if packages:
-        logger.info(f"샘플 키: {list(packages[0].keys())}")
-        logger.info(f"샘플 데이터: {json.dumps(packages[0], indent=2)[:300]}")
+def extract_plans(countries: list) -> list:
+    """operators → packages 파싱해서 플랜 단위로 추출"""
+    plans = []
 
-    return packages
+    for country in countries:
+        country_slug = country.get("slug", "")
+        country_code = country.get("country_code", "")
+        operators = country.get("operators") or []
 
-def normalize(pkg: dict) -> dict:
-    """flat 응답 구조 정규화"""
-    # 국가 코드
-    countries = pkg.get("countries") or []
-    country_code = countries[0] if len(countries) == 1 else "MULTI"
+        for operator in operators:
+            operator_title = operator.get("title", "")
+            operator_type  = operator.get("type", "local")
+            packages = operator.get("packages") or []
 
-    # 용량
-    data_gb = None
-    is_unlimited = pkg.get("is_unlimited", False)
-    amount = pkg.get("amount")  # MB 단위
-    if amount and not is_unlimited:
-        data_gb = round(amount / 1024, 2)
+            # 디버그: 첫 번째 operator 구조 출력
+            if not plans and operator:
+                logger.info(f"Operator 키: {list(operator.keys())}")
+                logger.info(f"Packages 수: {len(packages)}")
+                if packages:
+                    logger.info(f"Package 샘플: {json.dumps(packages[0], indent=2)[:300]}")
 
-    plan_id = pkg.get("package_id") or pkg.get("slug")
+            for pkg in packages:
+                plan_id = pkg.get("package_id") or pkg.get("id")
+                if not plan_id:
+                    continue
 
-    return {
-        "provider":      "airalo",
-        "plan_id":       str(plan_id) if plan_id else None,
-        "plan_name":     pkg.get("title"),
-        "country_code":  country_code,
-        "country_codes": json.dumps(countries),
-        "region":        pkg.get("slug", ""),
-        "plan_type":     pkg.get("type", "local"),
-        "data_gb":       data_gb,
-        "is_unlimited":  is_unlimited,
-        "validity_days": pkg.get("day"),
-        "price_usd":     float(pkg.get("price", 0)),
-        "net_price_usd": float(pkg.get("net_price", 0)),
-        "affiliate_url": f"https://www.airalo.com/package/{plan_id}",
-        "updated_at":    datetime.now(timezone.utc).isoformat(),
-    }
+                # 용량 파싱
+                data_gb = None
+                is_unlimited = pkg.get("is_unlimited", False)
+                amount = pkg.get("amount")  # MB
+                if amount and not is_unlimited:
+                    data_gb = round(amount / 1024, 2)
+
+                # 국가 코드
+                countries_list = pkg.get("countries") or [country_code]
+                c_code = countries_list[0] if len(countries_list) == 1 else "MULTI"
+
+                plans.append({
+                    "provider":      "airalo",
+                    "plan_id":       str(plan_id),
+                    "plan_name":     pkg.get("title") or f"{operator_title} {pkg.get('data', '')}",
+                    "country_code":  c_code,
+                    "country_codes": json.dumps(countries_list),
+                    "region":        country_slug,
+                    "plan_type":     operator_type,
+                    "data_gb":       data_gb,
+                    "is_unlimited":  is_unlimited,
+                    "validity_days": pkg.get("day"),
+                    "price_usd":     float(pkg.get("price", 0)),
+                    "net_price_usd": float(pkg.get("net_price", 0)),
+                    "affiliate_url": f"https://www.airalo.com/package/{plan_id}",
+                    "updated_at":    datetime.now(timezone.utc).isoformat(),
+                })
+
+    logger.info(f"✅ 총 {len(plans)}개 플랜 추출")
+    return plans
 
 def upsert_to_supabase(plans: list, supabase: Client):
     if not plans:
         logger.warning("저장할 데이터 없음")
         return
 
-    # 기존 데이터 삭제 후 새로 저장
     supabase.table("esim_plans").delete().eq("provider", "airalo").execute()
     logger.info("기존 Airalo 데이터 삭제 완료")
 
@@ -125,17 +142,15 @@ def upsert_to_supabase(plans: list, supabase: Client):
 
 def main():
     logger.info("=" * 50)
-    logger.info("Airalo 패키지 수집 시작 v2")
+    logger.info("Airalo 패키지 수집 시작 v3")
     logger.info("=" * 50)
 
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
     token = get_access_token()
-    packages = fetch_packages(token)
+    countries = fetch_raw(token)
+    plans = extract_plans(countries)
 
-    plans = [normalize(pkg) for pkg in packages]
-    plans = [p for p in plans if p.get("plan_id")]
-
-    logger.info(f"✅ 정규화 완료: {len(plans)}개")
+    logger.info(f"✅ 최종 플랜 수: {len(plans)}개")
     upsert_to_supabase(plans, supabase)
 
     logger.info("=" * 50)
