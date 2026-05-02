@@ -25,6 +25,7 @@ SUPABASE_KEY   = os.environ["SUPABASE_KEY"]
 
 ESIMGO_BASE_URL = "https://api.esim-go.com/v2.4"
 
+
 def fetch_catalogue() -> list:
     url = f"{ESIMGO_BASE_URL}/catalogue"
     headers = {"X-API-Key": ESIMGO_API_KEY}
@@ -39,14 +40,11 @@ def fetch_catalogue() -> list:
         resp.raise_for_status()
         data = resp.json()
 
-        # 응답 구조 확인 (첫 페이지만)
         if page == 1:
             logger.info(f"응답 타입: {type(data)}")
             if isinstance(data, dict):
                 logger.info(f"응답 키: {list(data.keys())}")
-            logger.info(f"샘플: {json.dumps(data, indent=2)[:400]}")
 
-        # dict면 bundles 또는 data 키에서 추출
         if isinstance(data, dict):
             batch = data.get("bundles") or data.get("data") or []
         else:
@@ -64,13 +62,11 @@ def fetch_catalogue() -> list:
 
     logger.info(f"✅ 총 {len(bundles)}개 번들 수집 완료")
 
-    if bundles:
-        logger.info(f"번들 타입: {type(bundles[0])}")
-        if isinstance(bundles[0], dict):
-            logger.info(f"번들 키: {list(bundles[0].keys())}")
-            logger.info(f"번들 샘플: {json.dumps(bundles[0], indent=2)[:400]}")
+    if bundles and isinstance(bundles[0], dict):
+        logger.info(f"번들 키: {list(bundles[0].keys())}")
 
     return bundles
+
 
 def normalize(bundle: dict) -> dict:
     countries = bundle.get("countries") or []
@@ -105,6 +101,7 @@ def normalize(bundle: dict) -> dict:
         "updated_at":    datetime.now(timezone.utc).isoformat(),
     }
 
+
 def upsert_to_supabase(plans: list, supabase: Client):
     if not plans:
         logger.warning("저장할 데이터 없음")
@@ -113,7 +110,7 @@ def upsert_to_supabase(plans: list, supabase: Client):
     supabase.table("esim_plans").delete().eq("provider", "esimgo").execute()
     logger.info("기존 eSIM Go 데이터 삭제 완료")
 
-    batch_size = 100
+    batch_size = 500
     total = 0
     for i in range(0, len(plans), batch_size):
         batch = plans[i:i + batch_size]
@@ -122,6 +119,7 @@ def upsert_to_supabase(plans: list, supabase: Client):
         logger.info(f"  저장 {total}/{len(plans)}")
 
     logger.info(f"✅ Supabase 저장 완료: {total}개")
+
 
 def main():
     logger.info("=" * 50)
@@ -143,6 +141,7 @@ def main():
     logger.info("=" * 50)
     logger.info("완료")
     logger.info("=" * 50)
+
 
 if __name__ == "__main__":
     main()
