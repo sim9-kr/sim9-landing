@@ -26,7 +26,6 @@ SUPABASE_KEY   = os.environ["SUPABASE_KEY"]
 ESIMGO_BASE_URL = "https://api.esim-go.com/v2.4"
 
 def fetch_catalogue() -> list:
-    """eSIM Go 카탈로그 전체 수집"""
     url = f"{ESIMGO_BASE_URL}/catalogue"
     headers = {"X-API-Key": ESIMGO_API_KEY}
     bundles = []
@@ -52,27 +51,23 @@ def fetch_catalogue() -> list:
 
     logger.info(f"✅ 총 {len(bundles)}개 번들 수집 완료")
 
-    # 첫 번째 번들 구조 확인
     if bundles:
-        logger.info(f"샘플 키: {list(bundles[0].keys())}")
+        logger.info(f"첫 번째 번들 타입: {type(bundles[0])}")
         logger.info(f"샘플 데이터: {json.dumps(bundles[0], indent=2)[:400]}")
 
     return bundles
 
 def normalize(bundle: dict) -> dict:
-    """eSIM Go 번들 → esim_plans 형식"""
     countries = bundle.get("countries") or []
     country_codes = [c.get("iso", "") for c in countries if c.get("iso")]
     country_code = country_codes[0] if len(country_codes) == 1 else "MULTI"
 
-    # 용량 (MB → GB)
     data_amount = bundle.get("dataAmount")
     is_unlimited = bundle.get("unlimited", False)
     data_gb = None
     if data_amount and not is_unlimited:
         data_gb = round(data_amount / 1024, 2)
 
-    # 가격 (조직 통화 단위 → USD 가정)
     price = bundle.get("price", 0)
     price_usd = round(price / 100, 2) if price > 100 else float(price)
 
@@ -91,7 +86,7 @@ def normalize(bundle: dict) -> dict:
         "validity_days": bundle.get("duration"),
         "price_usd":     price_usd,
         "net_price_usd": price_usd,
-        "affiliate_url": f"https://esim-go.com",
+        "affiliate_url": "https://esim-go.com",
         "updated_at":    datetime.now(timezone.utc).isoformat(),
     }
 
@@ -121,7 +116,10 @@ def main():
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
     bundles = fetch_catalogue()
 
-    plans = [normalize(b) for b in bundles]
+    plans = []
+    for b in bundles:
+        if isinstance(b, dict):
+            plans.append(normalize(b))
     plans = [p for p in plans if p.get("plan_id")]
 
     logger.info(f"✅ 정규화 완료: {len(plans)}개")
