@@ -37,7 +37,20 @@ def fetch_catalogue() -> list:
             "perPage": 100,
         })
         resp.raise_for_status()
-        batch = resp.json()
+        data = resp.json()
+
+        # 응답 구조 확인 (첫 페이지만)
+        if page == 1:
+            logger.info(f"응답 타입: {type(data)}")
+            if isinstance(data, dict):
+                logger.info(f"응답 키: {list(data.keys())}")
+            logger.info(f"샘플: {json.dumps(data, indent=2)[:400]}")
+
+        # dict면 bundles 또는 data 키에서 추출
+        if isinstance(data, dict):
+            batch = data.get("bundles") or data.get("data") or []
+        else:
+            batch = data
 
         if not batch:
             break
@@ -52,8 +65,10 @@ def fetch_catalogue() -> list:
     logger.info(f"✅ 총 {len(bundles)}개 번들 수집 완료")
 
     if bundles:
-        logger.info(f"첫 번째 번들 타입: {type(bundles[0])}")
-        logger.info(f"샘플 데이터: {json.dumps(bundles[0], indent=2)[:400]}")
+        logger.info(f"번들 타입: {type(bundles[0])}")
+        if isinstance(bundles[0], dict):
+            logger.info(f"번들 키: {list(bundles[0].keys())}")
+            logger.info(f"번들 샘플: {json.dumps(bundles[0], indent=2)[:400]}")
 
     return bundles
 
