@@ -1,0 +1,25 @@
+name: Fetch eSIM Access Plans
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install requests supabase
+      - name: Run fetch
+        env:
+          ESIMACCESS_ACCESS_CODE: ${{ secrets.ESIMACCESS_ACCESS_CODE }}
+          ESIMACCESS_SECRET_KEY:  ${{ secrets.ESIMACCESS_SECRET_KEY }}
+          SUPABASE_URL:           ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY:           ${{ secrets.SUPABASE_KEY }}
+        run: python scripts/fetch_esimaccess.py
