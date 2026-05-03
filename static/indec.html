@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIM9 - 해외 eSIM 가격비교</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #FFF8F2; }
+
+    .hero {
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('/images/sim9_01.png') center/cover no-repeat;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,107,107,0.85) 0%, rgba(255,142,83,0.85) 50%, rgba(255,179,71,0.8) 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      color: white;
+      padding: 60px 24px;
+    }
+    .logo { font-size: 13px; font-weight: 500; opacity: 0.9; letter-spacing: 3px; margin-bottom: 20px; }
+    .hero h1 { font-size: 30px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+    .hero p { font-size: 14px; opacity: 0.9; margin-bottom: 28px; line-height: 1.7; }
+    .cta-btn {
+      display: inline-block;
+      background: white;
+      color: #FF6B6B;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .preview {
+      margin: -28px 20px 0;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      position: relative;
+      z-index: 2;
+    }
+    .preview-label { font-size: 12px; color: #bbb; margin-bottom: 10px; }
+    .plan-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .plan-row:last-child { border-bottom: none; }
+    .provider { font-size: 11px; color: #bbb; }
+    .plan-name { font-size: 13px; font-weight: 500; color: #333; }
+    .badge { background: #FF6B6B; color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px; margin-left: 4px; }
+    .price { font-size: 15px; font-weight: 700; color: #FF6B6B; }
+    .price-krw { font-size: 10px; color: #ccc; }
+    .more-link { text-align: center; margin-top: 14px; }
+    .more-link a { color: #FF6B6B; font-size: 13px; text-decoration: none; font-weight: 500; }
+
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      padding: 28px 20px;
+    }
+    .feat-card {
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .feat-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+    .feat-label {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #333;
+      margin-top: 8px;
+    }
+
+    .buddy {
+      background: linear-gradient(135deg, #1D9E75, #0F6E56);
+      margin: 0 20px 28px;
+      border-radius: 16px;
+      padding: 24px;
+      color: white;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .buddy-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .buddy h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .buddy p { font-size: 12px; opacity: 0.85; margin-bottom: 12px; line-height: 1.5; }
+    .buddy-btn {
+      display: inline-block;
+      background: white;
+      color: #1D9E75;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .footer { text-align: center; padding: 20px; font-size: 11px; color: #ccc; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="logo">SIM9</div>
+    <h1>해외 eSIM<br>최저가로 비교하세요</h1>
+    <p>Airalo, eSIM Go 등 글로벌 업체<br>7,000개+ 플랜을 한눈에</p>
+    <a href="/compare/" class="cta-btn">가격비교 시작하기 →</a>
+  </div>
+</div>
+
+<div class="preview">
+  <div class="preview-label">🔥 인기 요금제</div>
+  <div class="plan-row">
+    <div>
+      <div class="provider">eSIM Go</div>
+      <div class="plan-name">일본 1GB · 7일 <span class="badge">최저가</span></div>
+    </div>
+    <div style="text-align:right">
+      <div class="price">$2.08</div>
+      <div class="price-krw">≈ ₩2,870</div>
+    </div>
+  </div>
+  <div class="plan-row">
+    <div>
+      <div class="provider">Airalo</div>
+      <div class="plan-name">태국 1GB · 7일</div>
+    </div>
+    <div style="text-align:right">
+      <div class="price" style="color:#888">$4.50</div>
+      <div class="price-krw">≈ ₩6,200</div>
+    </div>
+  </div>
+  <div class="plan-row">
+    <div>
+      <div class="provider">eSIM Go</div>
+      <div class="plan-name">베트남 1GB · 7일</div>
+    </div>
+    <div style="text-align:right">
+      <div class="price" style="color:#888">$3.20</div>
+      <div class="price-krw">≈ ₩4,400</div>
+    </div>
+  </div>
+  <div class="more-link">
+    <a href="/compare/">더 많은 요금제 비교하기 →</a>
+  </div>
+</div>
+
+<div class="features">
+  <div class="feat-card">
+    <img src="/images/sim9_05.png" class="feat-img" alt="여행">
+    <div class="feat-label">현지 망 직결</div>
+  </div>
+  <div class="feat-card">
+    <img src="/images/sim9_06.png" class="feat-img" alt="개통">
+    <div class="feat-label">3분 개통</div>
+  </div>
+  <div class="feat-card">
+    <img src="/images/sim9_07.png" class="feat-img" alt="지원">
+    <div class="feat-label">24시간 지원</div>
+  </div>
+</div>
+
+<div class="buddy">
+  <img src="/images/sim9_08.png" class="buddy-img" alt="Airport Buddy">
+  <div>
+    <h3>✈️ Airport Buddy</h3>
+    <p>현지 경험 많은 여행자가<br>공항 안내를 도와드립니다</p>
+    <a href="#" class="buddy-btn">얼리액세스 신청</a>
+  </div>
+</div>
+
+<div class="footer">© 2026 SIM9 · sim9.kr</div>
+
+</body>
+</html>
