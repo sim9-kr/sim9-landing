@@ -28,7 +28,6 @@ SUPABASE_KEY = os.environ["SUPABASE_KEY"]
 BASE_URL = "https://api.esimaccess.com/api/v1/open"
 
 def make_sign(timestamp: str) -> str:
-    """HMAC 서명 생성"""
     raw = ACCESS_CODE + timestamp + SECRET_KEY
     return hashlib.md5(raw.encode()).hexdigest().upper()
 
@@ -42,7 +41,6 @@ def get_headers() -> dict:
     }
 
 def fetch_packages() -> list:
-    """전체 패키지 목록 조회"""
     url = f"{BASE_URL}/package/list"
     packages = []
     page = 1
@@ -58,10 +56,6 @@ def fetch_packages() -> list:
         resp = requests.post(url, headers=get_headers(), json=payload)
         resp.raise_for_status()
         data = resp.json()
-
-        if page == 1:
-            logger.info(f"응답 키: {list(data.keys())}")
-            logger.info(f"샘플: {json.dumps(data, indent=2)[:400]}")
 
         if not data.get("success"):
             logger.error(f"API 오류: {data}")
@@ -85,26 +79,26 @@ def fetch_packages() -> list:
     return packages
 
 def normalize(pkg: dict) -> dict:
-    """eSIM Access 패키지 → esim_plans 형식"""
     location = pkg.get("locationCode", "") or pkg.get("location", "")
     country_code = location.upper() if len(location) == 2 else "MULTI"
 
-    # 용량
+    # 용량: bytes → GB
     data_gb = None
     is_unlimited = False
     volume = pkg.get("volume") or pkg.get("dataAmount")
     if volume:
-        if volume >= 999999:
+        gb = volume / 1024 / 1024 / 1024
+        if gb >= 100:
             is_unlimited = True
         else:
-            data_gb = round(volume / 1024, 2)
+            data_gb = round(gb, 2)
 
-    # 가격
+    # 가격: /1000 → USD
     price = pkg.get("price", 0) or pkg.get("retailPrice", 0)
-    price_usd = float(price) / 100 if price > 100 else float(price)
+    price_usd = round(float(price) / 1000, 2)
 
     net_price = pkg.get("wholesalePrice", 0) or price
-    net_price_usd = float(net_price) / 100 if net_price > 100 else float(net_price)
+    net_price_usd = round(float(net_price) / 1000, 2)
 
     plan_id = pkg.get("packageCode") or pkg.get("slug")
 
@@ -121,7 +115,7 @@ def normalize(pkg: dict) -> dict:
         "validity_days": pkg.get("duration") or pkg.get("validity"),
         "price_usd":     price_usd,
         "net_price_usd": net_price_usd,
-        "affiliate_url": f"https://shop.sim9.kr",
+        "affiliate_url": "https://shop.sim9.kr",
         "updated_at":    datetime.now(timezone.utc).isoformat(),
     }
 
