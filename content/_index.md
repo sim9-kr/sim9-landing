@@ -1,47 +1,188 @@
 ---
-title: "SIM9 - 일본 여행의 새로운 기준"
-description: "도착하자마자 바로 터지는 자유, SIM9 eSIM"
+title: "SIM9 - 해외 eSIM 가격비교"
+description: "글로벌 eSIM 최저가 비교 플랫폼"
 cascade:
   showDate: false
   showAuthor: false
   showReadingTime: false
 ---
 
-<section style="position: relative; padding: 120px 20px; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/sim9_06.png'); background-size: cover; background-position: center; color: white; text-align: center; border-radius: 20px; margin-bottom: 60px;">
-<h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5);">🇯🇵 일본 여행, 더 가볍고 빠르게.</h1>
-<p style="font-size: 1.5rem; margin-bottom: 40px; opacity: 0.9;">"도착하자마자 바로 터지는 자유, SIM9 eSIM"</p>
-<div style="display: flex; justify-content: center; gap: 15px;">
-<a href="https://shop.sim9.kr/" target="_blank" style="background: #ff4757; color: white; padding: 15px 35px; border-radius: 50px; font-weight: bold; text-decoration: none;">eSIM 구매하러 가기</a>
-<a href="/posts/guide" style="background: rgba(255,255,255,0.2); color: white; padding: 15px 35px; border-radius: 50px; font-weight: bold; text-decoration: none; backdrop-filter: blur(5px);">사용 가이드 보기</a>
-</div>
-</section>
+<style>
+* { box-sizing: border-box; }
+body { background: #FFF8F2; }
 
-<section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 80px;">
-<div style="text-align: center; padding: 20px;">
-<img src="/images/sim9_08.png" style="width: 100%; border-radius: 15px; margin-bottom: 20px; height: 200px; object-fit: cover;">
-<h3>현지 망 직결</h3>
-<p style="color: #666;">소프트뱅크, NTT 도코모 등 현지 1위 사업자 망을 사용하여 끊김 없는 속도를 제공합니다.</p>
-</div>
-<div style="text-align: center; padding: 20px;">
-<img src="/images/sim9_02.png" style="width: 100%; border-radius: 15px; margin-bottom: 20px; height: 200px; object-fit: cover;">
-<h3>3분 개통 완료</h3>
-<p style="color: #666;">구매 즉시 이메일로 발송되는 QR코드로 공항에서 바로 개통하세요.</p>
-</div>
-<div style="text-align: center; padding: 20px;">
-<img src="/images/sim9_05.png" style="width: 100%; border-radius: 15px; margin-bottom: 20px; height: 200px; object-fit: cover;">
-<h3>24시간 고객지원</h3>
-<p style="color: #666;">일본 현지에서도, 한국에서도. 문제 발생 시 실시간으로 대응해 드립니다.</p>
-</div>
-</section>
+.hero {
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  border-radius: 20px;
+  margin-bottom: 0;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/images/sim9_06.png') center/cover no-repeat;
+  border-radius: 20px;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,107,107,0.88) 0%, rgba(255,142,83,0.88) 50%, rgba(255,179,71,0.85) 100%);
+  border-radius: 20px;
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+  color: white;
+  padding: 60px 24px;
+}
+.hero-logo { font-size: 13px; font-weight: 500; opacity: 0.9; letter-spacing: 3px; margin-bottom: 20px; }
+.hero h1 { font-size: 30px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+.hero p { font-size: 14px; opacity: 0.9; margin-bottom: 28px; line-height: 1.7; }
+.cta-btn {
+  display: inline-block;
+  background: white;
+  color: #FF6B6B;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
 
-<hr style="border: 0; border-top: 1px solid #eee; margin: 60px 0;">
+.preview {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin: -24px 0 32px;
+  position: relative;
+  z-index: 2;
+}
+.preview-label { font-size: 12px; color: #bbb; margin-bottom: 10px; }
+.plan-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+.plan-row:last-child { border-bottom: none; }
+.provider { font-size: 11px; color: #bbb; }
+.plan-name { font-size: 13px; font-weight: 500; color: #333; }
+.badge { background: #FF6B6B; color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px; margin-left: 4px; }
+.price { font-size: 15px; font-weight: 700; color: #FF6B6B; }
+.price-krw { font-size: 10px; color: #ccc; }
+.more-link { text-align: center; margin-top: 14px; }
+.more-link a { color: #FF6B6B; font-size: 13px; text-decoration: none; font-weight: 500; }
 
-<section id="esim-section" style="max-width: 1200px; margin: 0 auto;">
-<h2 style="text-align: center; margin-bottom: 10px; font-size: 2rem;">🌍 실시간 인기 eSIM 플랜</h2>
-<p style="text-align: center; color: #999; margin-bottom: 40px;">실시간 환율이 적용된 최적의 가격을 확인하세요.</p>
-<div id="product-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 0 20px;">
-<p id="loading-msg" style="text-align: center; grid-column: 1/-1;">최신 플랜 정보를 불러오는 중입니다...</p>
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.feat-card { border-radius: 12px; overflow: hidden; }
+.feat-img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+.feat-label { text-align: center; font-size: 12px; font-weight: 600; color: #333; margin-top: 8px; }
+
+.buddy {
+  background: linear-gradient(135deg, #1D9E75, #0F6E56);
+  border-radius: 16px;
+  padding: 24px;
+  color: white;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.buddy-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+.buddy h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.buddy p { font-size: 12px; opacity: 0.85; margin-bottom: 12px; line-height: 1.5; }
+.buddy-btn {
+  display: inline-block;
+  background: white;
+  color: #1D9E75;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+</style>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-logo">SIM9</div>
+    <h1>해외 eSIM<br>최저가로 비교하세요</h1>
+    <p>Airalo, eSIM Go 등 글로벌 업체<br>7,000개+ 플랜을 한눈에</p>
+    <a href="/compare/" class="cta-btn">가격비교 시작하기 →</a>
+  </div>
 </div>
-</section>
 
-<script src="/js/products.js"></script>
+<div class="preview">
+  <div class="preview-label">🔥 인기 요금제</div>
+  <div class="plan-row">
+    <div>
+      <div class="provider">eSIM Go</div>
+      <div class="plan-name">일본 1GB · 7일 <span class="badge">최저가</span></div>
+    </div>
+    <div style="text-align:right">
+      <div class="price">$2.08</div>
+      <div class="price-krw">≈ ₩2,870</div>
+    </div>
+  </div>
+  <div class="plan-row">
+    <div>
+      <div class="provider">Airalo</div>
+      <div class="plan-name">태국 1GB · 7일</div>
+    </div>
+    <div style="text-align:right">
+      <div class="price" style="color:#888">$4.50</div>
+      <div class="price-krw">≈ ₩6,200</div>
+    </div>
+  </div>
+  <div class="plan-row">
+    <div>
+      <div class="provider">eSIM Go</div>
+      <div class="plan-name">베트남 1GB · 7일</div>
+    </div>
+    <div style="text-align:right">
+      <div class="price" style="color:#888">$3.20</div>
+      <div class="price-krw">≈ ₩4,400</div>
+    </div>
+  </div>
+  <div class="more-link">
+    <a href="/compare/">더 많은 요금제 비교하기 →</a>
+  </div>
+</div>
+
+<div class="features">
+  <div class="feat-card">
+    <img src="/images/sim9_08.png" class="feat-img" alt="여행">
+    <div class="feat-label">현지 망 직결</div>
+  </div>
+  <div class="feat-card">
+    <img src="/images/sim9_02.png" class="feat-img" alt="개통">
+    <div class="feat-label">3분 개통</div>
+  </div>
+  <div class="feat-card">
+    <img src="/images/sim9_05.png" class="feat-img" alt="지원">
+    <div class="feat-label">24시간 지원</div>
+  </div>
+</div>
+
+<div class="buddy">
+  <img src="/images/sim9_07.png" class="buddy-img" alt="Airport Buddy">
+  <div>
+    <h3>✈️ Airport Buddy</h3>
+    <p>현지 경험 많은 여행자가<br>공항 안내를 도와드립니다</p>
+    <a href="#" class="buddy-btn">얼리액세스 신청</a>
+  </div>
+</div>
